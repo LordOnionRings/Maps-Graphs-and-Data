@@ -140,6 +140,13 @@
   .feature-video h3{color:var(--white); font-size:19px; margin-top:6px;}
   .feature-video .fv-sub{color:rgba(255,255,255,0.7); font-size:13.5px; margin-top:6px;}
   .feature-video .watch{color:var(--teal-300); font-family:'IBM Plex Mono',monospace; font-size:12px; margin-top:12px; display:inline-block;}
+  .vpn-fallback{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:rgba(255,255,255,0.55);
+    margin-top:10px; max-width:760px;
+  }
+  .vpn-fallback a, .vpn-fallback .vpn-fallback-link{color:var(--teal-300); text-decoration:underline;}
+  .vpn-fallback.on-light{color:var(--ink-soft); margin-top:8px; margin-left:2px;}
+  .vpn-fallback.on-light a, .vpn-fallback.on-light .vpn-fallback-link{color:var(--teal-700);}
 
   /* Reason cards */
   .reason-grid{
@@ -276,6 +283,34 @@
   footer{padding:36px 24px 60px; text-align:center;}
   footer p{font-size:12.5px; color:var(--ink-soft);}
 
+  /* ===== RANDOMIZER ===== */
+  #random-btn{
+    position:fixed; bottom:22px; right:22px; z-index:150;
+    display:flex; align-items:center; gap:9px;
+    background:var(--navy-950); color:var(--white);
+    border:none; border-radius:50px;
+    padding:14px 20px 14px 16px;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12.5px;
+    letter-spacing:0.04em; text-transform:uppercase;
+    cursor:pointer; box-shadow:0 10px 26px rgba(10,31,46,0.35);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  #random-btn:hover{transform:translateY(-3px); box-shadow:0 14px 32px rgba(10,31,46,0.42);}
+  #random-btn:focus-visible{outline:2px solid var(--teal-300); outline-offset:3px;}
+  #random-btn svg{width:20px; height:20px; flex:none;}
+  .random-banner{
+    background:linear-gradient(120deg, var(--gold-400), var(--gold-600));
+    color:var(--navy-950); font-family:'IBM Plex Mono',monospace;
+    font-weight:700; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase;
+    padding:10px 28px; text-align:center;
+    border-radius:16px 16px 0 0;
+  }
+  .modal-box.has-banner .modal-close{top:60px;}
+  @media (max-width:640px){
+    #random-btn{bottom:16px; right:16px; padding:13px 16px 13px 14px; font-size:11px;}
+    #random-btn span.rb-label{display:none;}
+  }
+
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important; transition:none !important;}
   }
@@ -333,6 +368,7 @@
             <span class="watch">Watch on YouTube &rarr;</span>
           </div>
         </a>
+        <p class="vpn-fallback" id="hero-vpn-fallback"></p>
       </div>
     </div>
 
@@ -393,6 +429,12 @@
 
 <footer><p>Built for I&amp;S &middot; Data Visualization &middot; Click any card to explore</p></footer>
 
+<!-- ============ RANDOMIZER BUTTON ============ -->
+<button id="random-btn" type="button" aria-label="Get a random map or chart type">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
+  <span class="rb-label">Random Pick</span>
+</button>
+
 <!-- ============ MODAL ============ -->
 <div id="modal-overlay">
   <div class="modal-box" role="dialog" aria-modal="true">
@@ -438,7 +480,8 @@ const ICONS = {
   memory: `<svg viewBox="0 0 24 24"><path d="M12,2 L14.5,8.5 L21,9.5 L16.2,14 L17.5,20.5 L12,17.2 L6.5,20.5 L7.8,14 L3,9.5 L9.5,8.5 Z" fill="none" stroke="var(--teal-500)" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
 
   article: `<svg viewBox="0 0 24 24" fill="none" stroke="var(--teal-300)" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="1.5"/><line x1="7" y1="7" x2="17" y2="7"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="7" y1="15" x2="13" y2="15"/></svg>`,
-  tool: `<svg viewBox="0 0 24 24" fill="none" stroke="var(--teal-300)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2-2z"/></svg>`
+  tool: `<svg viewBox="0 0 24 24" fill="none" stroke="var(--teal-300)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2-2z"/></svg>`,
+  play: `<svg viewBox="0 0 24 24" fill="none" stroke="var(--teal-300)" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5 L16 12 L10 15.5 Z" fill="var(--teal-300)" stroke="none"/></svg>`
 };
 
 /* ============================================================
@@ -451,7 +494,8 @@ const mapsData = [
     when:"Use a physical map when you need to understand the land itself — planning a hiking trail, figuring out why a river bends where it does, or explaining why the Inca built terraces into steep Andean slopes instead of farming flat land.",
     benefit:"Shows exactly what the ground looks like, which explains why people settled, farmed, or built where they did.",
     limit:"Says nothing about who controls the land or how many people live there — you'd need a political or population map for that.",
-    make:"Search \"physical map\" or \"terrain map\" in Canva's Elements panel, drop it onto your design, then adjust color/elevation contrast in the Effects panel. Add a compass rose and scale from Elements so it reads as a real map."
+    make:"Search \"physical map\" or \"terrain map\" in Canva's Elements panel, drop it onto your design, then adjust color/elevation contrast in the Effects panel. Add a compass rose and scale from Elements so it reads as a real map.",
+    example:{url:"https://mapmaker.nationalgeographic.org/", label:"National Geographic MapMaker", source:"A real GIS tool built by National Geographic and Esri, showing live terrain and elevation data for the whole planet."}
   },
   {
     icon:"political", title:"Political Map", tool:"Canva",
@@ -459,7 +503,8 @@ const mapsData = [
     when:"Use a political map to answer \"whose land is this?\" — comparing how the borders of the Inca, Maya, and Aztec empires overlap with modern-day countries is a political map question.",
     benefit:"Makes ownership, borders, and governance instantly visible — you can see at a glance which empire controlled which region.",
     limit:"Borders shown today may not match borders from the past, and political maps can hide the fact that a \"border\" was often a rough zone, not a hard line.",
-    make:"In Canva, start from a blank World Map element or search \"political map,\" then use the Shapes tool to draw and color your own borders. Label each region with the Text tool and add a legend."
+    make:"In Canva, start from a blank World Map element or search \"political map,\" then use the Shapes tool to draw and color your own borders. Label each region with the Text tool and add a legend.",
+    example:{url:"https://mapmaker.nationalgeographic.org/", label:"National Geographic MapMaker", source:"The same GIS tool as the Physical Map card — switch its layer to country borders to see a live political map."}
   },
   {
     icon:"climate", title:"Climate Map", tool:"Canva",
@@ -467,7 +512,8 @@ const mapsData = [
     when:"Use a climate map to explain why a civilization grew certain crops, or why the Inca farmed different foods at different elevations depending on the temperature band.",
     benefit:"Explains \"why here and not there\" for farming, settlement, and trade routes — climate drives almost everything else.",
     limit:"Climate zones shift and blur at their edges in real life; a map has to draw hard lines where nature doesn't.",
-    make:"Search \"climate map\" or \"world map\" in Canva, then recolor regions by climate zone with the color picker — stick to one color family (light to dark) so the pattern reads as a gradient. Add a legend."
+    make:"Search \"climate map\" or \"world map\" in Canva, then recolor regions by climate zone with the color picker — stick to one color family (light to dark) so the pattern reads as a gradient. Add a legend.",
+    example:{url:"https://science.nasa.gov/earth/earth-observatory/global-maps/", label:"NASA Earth Observatory Global Maps", source:"Real satellite climate data — temperature, aerosols, sea surface conditions — updated monthly by NASA."}
   },
   {
     icon:"choropleth", title:"Choropleth (Heat) Map", tool:"Canva / ArcGIS",
@@ -476,7 +522,7 @@ const mapsData = [
     benefit:"Extremely easy to read at a glance — darker usually means \"more,\" and the human eye is great at comparing shades.",
     limit:"A large region with a small population can look more important than a small, crowded one, because the color fills the whole shape regardless of how many people are actually inside it.",
     make:"In Canva, use a blank map element and recolor each region by hand with the color picker. Use only one color's lighter/darker shades, from light (low value) to dark (high value), and always include a legend. For a version built on real data instead of hand-coloring, ArcGIS Online's Map Viewer has a genuine \"Counts and Amounts (Color)\" choropleth style — upload a spreadsheet and it colors the regions automatically.",
-    owid:{url:"https://ourworldindata.org/grapher/annual-co2-emissions-per-country", label:"CO₂ emissions by country"}
+    example:{url:"https://ourworldindata.org/grapher/annual-co2-emissions-per-country", label:"CO₂ emissions by country", source:"Our World in Data — a nonprofit research site at Oxford University built entirely on public, sourced datasets."}
   },
   {
     icon:"dotdensity", title:"Dot Density Map", tool:"Canva / ArcGIS",
@@ -484,7 +530,8 @@ const mapsData = [
     when:"Use a dot density map to show where something actually is, not just an average — like where Pre-Columbian settlements clustered along rivers and coastlines rather than spreading evenly across the land.",
     benefit:"Shows real concentration and gaps — you can see the exact pattern of where something is dense versus empty.",
     limit:"Takes real work to make well, and if there are too many dots, it turns into a solid blob that's just as hard to read as no map at all.",
-    make:"Canva has no automatic dot tool — place a small circle element, then copy/paste it repeatedly, clustering it more densely in high-value areas. ArcGIS Online's Map Viewer has a real \"Dot Density\" style built for exactly this: upload your data and it places the dots automatically, correctly spaced, with the legend built in."
+    make:"Canva has no automatic dot tool — place a small circle element, then copy/paste it repeatedly, clustering it more densely in high-value areas. ArcGIS Online's Map Viewer has a real \"Dot Density\" style built for exactly this: upload your data and it places the dots automatically, correctly spaced, with the legend built in.",
+    example:{url:"https://neo.gsfc.nasa.gov/view.php?datasetId=SEDAC_POP", label:"NASA population density map", source:"Real gridded population data — each colored grid cell shows how many people actually live there, built from census and satellite data."}
   },
   {
     icon:"cluster", title:"Cluster Map", tool:"Canva",
@@ -492,7 +539,8 @@ const mapsData = [
     when:"Use a cluster map to spot a hot spot — like where most Pre-Columbian trade routes converged, or where earthquake activity concentrates along a fault line.",
     benefit:"Draws the eye immediately to the most active or important area, which is useful for finding patterns before you know what's causing them.",
     limit:"A cluster shows you where, not why — you still have to investigate what's actually causing the concentration.",
-    make:"In Canva, place a low-opacity circle over the region where your data points group together, then layer smaller dot or icon elements on top to represent the individual points inside it."
+    make:"In Canva, place a low-opacity circle over the region where your data points group together, then layer smaller dot or icon elements on top to represent the individual points inside it.",
+    example:{url:"https://earthquake.usgs.gov/earthquakes/map/", label:"USGS real-time earthquake map", source:"The U.S. government's official earthquake monitoring map — watch epicenters cluster along real plate boundaries."}
   },
   {
     icon:"cartogram", title:"Cartogram", tool:"Hard to build by hand",
@@ -501,7 +549,7 @@ const mapsData = [
     benefit:"Corrects the \"big country looks important\" bias of a normal map by scaling to whatever actually matters for your question.",
     limit:"The shapes get distorted enough that the map can become hard to recognize geographically — you often lose the ability to tell where things actually are.",
     make:"Genuinely the hardest map type to build by hand. In Canva, the closest you can get is manually resizing each region's shape using the data value as a rough guide — that's an estimate, not a precise cartogram. An accurate one needs specialized software.",
-    owid:{url:"https://ourworldindata.org/world-population-cartogram", label:"The World Population Cartogram"}
+    example:{url:"https://ourworldindata.org/world-population-cartogram", label:"The World Population Cartogram", source:"Our World in Data — a nonprofit research site at Oxford University built entirely on public, sourced datasets."}
   },
   {
     icon:"flowline", title:"Flow-Line Map", tool:"Canva",
@@ -509,7 +557,8 @@ const mapsData = [
     when:"Use a flow-line map to show movement — migration routes across the Bering Land Bridge, trade goods moving along the vertical archipelago, or modern airline routes.",
     benefit:"Movement and direction are hard to show any other way — a flow-line map turns \"things moved from A to B\" into something you can see instantly.",
     limit:"Too many lines crossing each other becomes visual spaghetti fast; flow-line maps only stay readable with a limited number of routes.",
-    make:"In Canva, use the Line or Arrow tool from Elements, drawn from origin to destination. Vary the stroke width so thicker means more movement, and keep the total number of lines low enough to stay readable."
+    make:"In Canva, use the Line or Arrow tool from Elements, drawn from origin to destination. Vary the stroke width so thicker means more movement, and keep the total number of lines low enough to stay readable.",
+    example:{url:"https://www.flowmap.blue/", label:"Flowmap Blue", source:"A free flow-mapping tool with real published examples of migration, trade, and transit routes."}
   }
 ];
 
@@ -523,7 +572,8 @@ const chartsData = [
     when:"Use a bar chart to compare separate categories, like comparing the estimated population of the Inca, Maya, and Aztec empires side by side.",
     benefit:"Instantly readable — humans are excellent at comparing bar lengths, even the first time they see the data.",
     limit:"Works best with a small number of categories; more than 8–10 bars gets cluttered and hard to compare at a glance.",
-    make:"Type your categories in one column and their numbers in the next. Select both columns, then Insert → Chart, and choose Bar or Column. Add a title and label both axes."
+    make:"Type your categories in one column and their numbers in the next. Select both columns, then Insert → Chart, and choose Bar or Column. Add a title and label both axes.",
+    example:{url:"https://www.datawrapper.de/academy/examples-of-datawrapper-bar-charts", label:"Real bar charts from Datawrapper Academy", source:"Datawrapper — a chart-building tool used by major news organizations, with a gallery of real published bar charts."}
   },
   {
     icon:"pie", title:"Pie Chart", tool:"Excel / Numbers",
@@ -531,7 +581,8 @@ const chartsData = [
     when:"Use a pie chart when you're showing parts of a single whole — like what percentage of a civilization's diet came from maize, beans, and squash.",
     benefit:"Instantly communicates \"this is one part of a total\" in a way a bar chart doesn't.",
     limit:"Falls apart with more than 5–6 slices, and if two slices are close in size, it's genuinely hard to tell which is bigger just by looking.",
-    make:"List categories and values in two columns, making sure the values add up to a meaningful total. Select the data, then Insert → Chart → Pie. Label each slice directly rather than relying only on a legend."
+    make:"List categories and values in two columns, making sure the values add up to a meaningful total. Select the data, then Insert → Chart → Pie. Label each slice directly rather than relying only on a legend.",
+    example:{url:"https://www.datawrapper.de/academy/examples-of-datawrapper-pie-donut-charts", label:"Real pie charts from Datawrapper Academy", source:"Datawrapper — a chart-building tool used by major news organizations, with a gallery of real published pie charts."}
   },
   {
     icon:"donut", title:"Donut Chart", tool:"Excel / Numbers",
@@ -539,7 +590,8 @@ const chartsData = [
     when:"Use a donut chart the same way as a pie chart, but when you want to put a label or total number in the empty center — useful for dashboards or infographics.",
     benefit:"Handles slightly more categories than a pie chart while staying readable, and the open center is useful space.",
     limit:"Same core problem as a pie chart — too many thin slices become impossible to compare.",
-    make:"Set it up exactly like a pie chart, then change the chart type to Donut instead of Pie. Use the center space for a title or a key total number."
+    make:"Set it up exactly like a pie chart, then change the chart type to Donut instead of Pie. Use the center space for a title or a key total number.",
+    example:{url:"https://www.datawrapper.de/academy/examples-of-datawrapper-pie-donut-charts", label:"Real donut charts from Datawrapper Academy", source:"Datawrapper — a chart-building tool used by major news organizations, with a gallery of real published donut charts."}
   },
   {
     icon:"line", title:"Line Chart", tool:"Excel / Numbers",
@@ -548,7 +600,7 @@ const chartsData = [
     benefit:"The best chart type for showing a trend — going up, going down, staying flat — at a glance.",
     limit:"Only works with continuous data over time or sequence; using it to compare unrelated categories doesn't make sense.",
     make:"Put your time periods (years, months) in one column and the values in the next. Select both, then Insert → Chart → Line. Keep it to 4–5 lines max if comparing multiple categories, or it turns into a tangle.",
-    owid:{url:"https://ourworldindata.org/grapher/population", label:"World population growth"}
+    example:{url:"https://ourworldindata.org/grapher/population", label:"World population growth", source:"Our World in Data — a nonprofit research site at Oxford University built entirely on public, sourced datasets."}
   },
   {
     icon:"scatter", title:"Scatter Plot", tool:"Excel / Numbers",
@@ -557,7 +609,7 @@ const chartsData = [
     benefit:"The clearest way to spot a relationship (or the lack of one) between two variables, including outliers that don't fit the pattern.",
     limit:"Needs a reasonable number of data points to show a real pattern — a scatter plot with five dots doesn't tell you much.",
     make:"Put your two related values in two columns (e.g. elevation and temperature). Select both, then Insert → Chart → Scatter (sometimes called XY Chart). Don't connect the dots — the pattern comes from their positions.",
-    owid:{url:"https://ourworldindata.org/grapher/life-expectancy-vs-gdp-per-capita", label:"Life expectancy vs. GDP per capita"}
+    example:{url:"https://ourworldindata.org/grapher/life-expectancy-vs-gdp-per-capita", label:"Life expectancy vs. GDP per capita", source:"Our World in Data — a nonprofit research site at Oxford University built entirely on public, sourced datasets."}
   },
   {
     icon:"bubble", title:"Bubble Chart", tool:"Excel / Numbers",
@@ -566,7 +618,7 @@ const chartsData = [
     benefit:"Packs three variables into one readable image instead of forcing you to build three separate charts.",
     limit:"Gets messy fast if bubbles overlap heavily, and people are worse at comparing circle sizes accurately than bar lengths.",
     make:"Arrange three columns — two for position (x and y) and one for bubble size. Select all three, then Insert → Chart → Bubble. Keep the number of bubbles limited so they don't overlap and hide each other.",
-    owid:{url:"https://ourworldindata.org/grapher/life-expectancy-vs-gdp-per-capita", label:"Life expectancy vs. GDP per capita, sized by population"}
+    example:{url:"https://ourworldindata.org/grapher/life-expectancy-vs-gdp-per-capita", label:"Life expectancy vs. GDP per capita, sized by population", source:"Our World in Data — a nonprofit research site at Oxford University built entirely on public, sourced datasets."}
   },
   {
     icon:"area", title:"Area Chart", tool:"Excel / Numbers",
@@ -575,7 +627,7 @@ const chartsData = [
     benefit:"The filled color makes the \"amount\" feel more visual and immediate than a plain line.",
     limit:"With more than 4–5 overlapping areas, the fills stack on top of each other and become impossible to read individually.",
     make:"Set it up exactly like a line chart (time in one column, values in the next), then choose Area instead of Line when picking the chart type.",
-    owid:{url:"https://ourworldindata.org/grapher/energy-mix", label:"World energy mix by source"}
+    example:{url:"https://ourworldindata.org/grapher/energy-mix", label:"World energy mix by source", source:"Our World in Data — a nonprofit research site at Oxford University built entirely on public, sourced datasets."}
   },
   {
     icon:"histogram", title:"Histogram", tool:"Excel / Numbers",
@@ -583,7 +635,8 @@ const chartsData = [
     when:"Use a histogram to see the distribution of a data set — like how many students scored in each 10-point range on a test, or how ages are distributed in a population.",
     benefit:"The only chart type built specifically to answer \"what's typical, and what's rare?\" in a data set.",
     limit:"Easy to confuse with a bar chart, but the bins have to be equal-width ranges of one number — it doesn't work for comparing separate categories.",
-    make:"List your raw data points in one column. In Excel, Insert → Chart → Histogram sorts the numbers into ranges automatically. Numbers requires setting up the bin ranges yourself first."
+    make:"List your raw data points in one column. In Excel, Insert → Chart → Histogram sorts the numbers into ranges automatically. Numbers requires setting up the bin ranges yourself first.",
+    example:{url:"https://www.datawrapper.de/academy/histogram-min-max-median-mean", label:"How to read a histogram — Datawrapper Academy", source:"Datawrapper — a chart-building tool used by major news organizations, with a real embedded histogram to explore."}
   },
   {
     icon:"venn", title:"Venn Diagram", tool:"Canva / Excel SmartArt",
@@ -591,7 +644,8 @@ const chartsData = [
     when:"Use a Venn diagram to compare and contrast — like comparing farming methods across three Pre-Columbian civilizations to see which practices they shared and which were unique.",
     benefit:"The clearest way to visualize overlap and difference between groups at the same time — you can literally see what's shared.",
     limit:"Gets confusing fast past three circles, since the number of overlapping regions grows much faster than the number of circles.",
-    make:"In Canva or Excel's SmartArt, search \"Venn diagram\" and drag in a 2- or 3-circle template. Label each circle, then add text in the overlapping sections for what's shared."
+    make:"In Canva or Excel's SmartArt, search \"Venn diagram\" and drag in a 2- or 3-circle template. Label each circle, then add text in the overlapping sections for what's shared.",
+    example:{url:"http://passyworldofmathematics.com/real-world-venn-diagrams/", label:"Real World Venn Diagrams — Passy's World of Mathematics", source:"A math-education resource collecting genuine Venn diagram uses across biology, language, and science — this one is a comparison tool, not a live-data chart like the others."}
   },
   {
     icon:"timeline", title:"Timeline", tool:"Canva",
@@ -599,7 +653,8 @@ const chartsData = [
     when:"Use a timeline any time sequence and duration matter — like mapping the rise and fall of Pre-Columbian civilizations across centuries.",
     benefit:"Makes \"what happened first\" and \"how long did this last\" visually obvious in a way a list of dates never quite manages.",
     limit:"A timeline can quietly distort duration if events are unevenly spaced in time but drawn evenly on the page — scale matters.",
-    make:"In Canva, search \"timeline\" under Templates or Elements for a ready-made line with markers. Place your events along it in order, spacing them proportionally to the actual time gaps, not just evenly."
+    make:"In Canva, search \"timeline\" under Templates or Elements for a ready-made line with markers. Place your events along it in order, spacing them proportionally to the actual time gaps, not just evenly.",
+    example:{url:"https://www.biointeractive.org/classroom-resources/earthviewer", label:"EarthViewer — HHMI BioInteractive", source:"A free interactive timeline built by the Howard Hughes Medical Institute, spanning 4.5 billion years of Earth's history."}
   }
 ];
 
@@ -613,13 +668,13 @@ const reasonsData = [
 const resourcesData = [
   {type:"video", id:"jbkSRLYSojo", title:"200 Countries, 200 Years, 4 Minutes", source:"Hans Rosling / BBC",
    blurb:"120,000 data points, one moving bubble chart, the entire story of the modern world in four minutes.",
-   url:"https://www.youtube.com/watch?v=jbkSRLYSojo"},
+   url:"https://www.youtube.com/watch?v=jbkSRLYSojo", bilibili:"https://www.bilibili.com/video/BV1RPgH6LEgH/"},
   {type:"video", id:"E91bGT9BjYk", title:"How to Spot a Misleading Graph", source:"TED-Ed",
    blurb:"Axis tricks, cherry-picking, and scale distortion — how graphs can lie even when the numbers are real.",
-   url:"https://www.youtube.com/watch?v=E91bGT9BjYk"},
+   url:"https://www.youtube.com/watch?v=E91bGT9BjYk", bilibili:"[Insert Bilibili link here]"},
   {type:"video", id:"iHEMOdRo5u8", title:"What is a Map?", source:"Crash Course Geography #2",
    blurb:"Reference maps vs. thematic maps, and the choices cartographers make that shape how you see the world.",
-   url:"https://www.youtube.com/watch?v=iHEMOdRo5u8"},
+   url:"https://www.youtube.com/watch?v=iHEMOdRo5u8", bilibili:"https://www.bilibili.com/video/BV1zdgn6QEPN/"},
   {type:"article", title:"33 Data Visualization Types", source:"visme.co",
    blurb:"Every chart and map type beyond the 18 covered here — good for going further on your own.",
    url:"https://visme.co/blog/data-visualization-types/"},
@@ -628,7 +683,10 @@ const resourcesData = [
    url:"https://ourworldindata.org/"},
   {type:"tool", title:"ArcGIS Map Viewer", source:"Esri / arcgis.com",
    blurb:"A real, free online mapping tool. Upload your own data and it can build an actual choropleth or dot density map for you — no hand-coloring required.",
-   url:"https://www.arcgis.com/apps/mapviewer/index.html"}
+   url:"https://www.arcgis.com/apps/mapviewer/index.html"},
+  {type:"video-bilibili", title:"Data Visualization", source:"Crash Course",
+   blurb:"A Crash Course overview of how data visualization works and why it matters — hosted on Bilibili.",
+   url:"https://www.bilibili.com/video/BV1fdgn6DEP8/"}
 ];
 
 /* ============================================================
@@ -643,12 +701,22 @@ function renderVizGrid(containerId, data){
       <button class="viz-card" type="button">
         <div class="viz-icon">${ICONS[item.icon]}</div>
         <h3>${item.title}</h3>
-        <span class="viz-tag">${item.tool}</span>${item.owid ? '<span class="viz-tag owid">OWID example</span>' : ''}
+        <span class="viz-tag">${item.tool}</span>${item.example ? '<span class="viz-tag owid">Real example</span>' : ''}
       </button>
     `);
     card.addEventListener('click', () => openModal(item));
     grid.appendChild(card);
   });
+}
+
+function bilibiliFallbackHTML(bilibili, lightMode){
+  if(!bilibili) return '';
+  const cls = lightMode ? 'vpn-fallback on-light' : 'vpn-fallback';
+  const isLink = /^https?:\/\//.test(bilibili);
+  const inner = isLink
+    ? `<a href="${bilibili}" target="_blank" rel="noopener">Watch on Bilibili &rarr;</a>`
+    : `<span class="vpn-fallback-link">${bilibili}</span>`;
+  return `<p class="${cls}">If unable to access YouTube: ${inner}</p>`;
 }
 
 function renderReasons(){
@@ -668,14 +736,30 @@ function renderResources(){
   const grid = document.getElementById('resource-grid');
   resourcesData.forEach(r => {
     if(r.type === 'video'){
+      const fallback = bilibiliFallbackHTML(r.bilibili, true);
+      grid.appendChild(el(`
+        <div>
+          <a class="resource-card" href="${r.url}" target="_blank" rel="noopener">
+            <img class="resource-thumb" src="https://img.youtube.com/vi/${r.id}/hqdefault.jpg" alt="${r.title} thumbnail">
+            <div class="resource-body">
+              <p class="eyebrow">Video &middot; ${r.source}</p>
+              <h3>${r.title}</h3>
+              <p>${r.blurb}</p>
+              <span class="resource-cta">Watch on YouTube &rarr;</span>
+            </div>
+          </a>
+          ${fallback}
+        </div>
+      `));
+    } else if(r.type === 'video-bilibili'){
       grid.appendChild(el(`
         <a class="resource-card" href="${r.url}" target="_blank" rel="noopener">
-          <img class="resource-thumb" src="https://img.youtube.com/vi/${r.id}/hqdefault.jpg" alt="${r.title} thumbnail">
+          <div class="article-thumb">${ICONS.play}</div>
           <div class="resource-body">
             <p class="eyebrow">Video &middot; ${r.source}</p>
             <h3>${r.title}</h3>
             <p>${r.blurb}</p>
-            <span class="resource-cta">Watch on YouTube &rarr;</span>
+            <span class="resource-cta">Watch on Bilibili &rarr;</span>
           </div>
         </a>
       `));
@@ -706,9 +790,16 @@ const modalIcon = document.getElementById('modal-icon');
 const modalTitle = document.getElementById('modal-title');
 const modalBody = document.getElementById('modal-body');
 
-function openModal(item){
+function openModal(item, isRandom){
   modalIcon.innerHTML = ICONS[item.icon];
   modalTitle.textContent = item.title;
+  const modalBox = document.querySelector('.modal-box');
+  const oldBanner = document.getElementById('random-banner-slot');
+  if(oldBanner) oldBanner.remove();
+  modalBox.classList.toggle('has-banner', !!isRandom);
+  if(isRandom){
+    modalBox.insertAdjacentHTML('afterbegin', '<div class="random-banner" id="random-banner-slot">🎲 Your Random Pick — this is your assignment</div>');
+  }
   modalBody.innerHTML = `
     <div class="modal-section">
       <span class="eyebrow">Definition</span>
@@ -732,10 +823,10 @@ function openModal(item){
       <span class="tool-pill">Make it yourself &middot; ${item.tool}</span>
       <p>${item.make}</p>
     </div>
-    ${item.owid ? `
+    ${item.example ? `
     <div class="modal-section">
       <span class="eyebrow">See it in the real world</span>
-      <p><a href="${item.owid.url}" target="_blank" rel="noopener" style="color:var(--teal-700); font-weight:600;">${item.owid.label} \u2192</a><br>Live chart from Our World in Data, a nonprofit research site at Oxford University built entirely on public, sourced datasets.</p>
+      <p><a href="${item.example.url}" target="_blank" rel="noopener" style="color:var(--teal-700); font-weight:600;">${item.example.label} \u2192</a><br>${item.example.source}</p>
     </div>` : ''}
   `;
   overlay.classList.add('open');
@@ -763,12 +854,22 @@ document.querySelectorAll('.navlinks button').forEach(btn => {
 });
 
 /* ============================================================
+   RANDOMIZER — picks one of all 18 map/chart types
+   ============================================================ */
+const allVizData = [...mapsData, ...chartsData];
+document.getElementById('random-btn').addEventListener('click', () => {
+  const pick = allVizData[Math.floor(Math.random() * allVizData.length)];
+  openModal(pick, true);
+});
+
+/* ============================================================
    INIT
    ============================================================ */
 renderReasons();
 renderResources();
 renderVizGrid('maps-grid', mapsData);
 renderVizGrid('graphs-grid', chartsData);
+document.getElementById('hero-vpn-fallback').innerHTML = bilibiliFallbackHTML("https://www.bilibili.com/video/BV1RPgH6LEgH/", false);
 </script>
 </body>
 </html>
